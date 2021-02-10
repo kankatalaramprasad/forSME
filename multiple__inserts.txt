@@ -1,0 +1,28 @@
+CREATE TABLE products(
+  product_id number(20),
+  product_name varchar2(25),
+  product_price number(20),
+  CONSTRAINT products_pk PRIMARY KEY (product_id));
+CREATE TABLE departments(
+  department_id number(20),
+  department_name varchar2(25),
+  department_section varchar2(25),
+  CONSTRAINT departments_pk PRIMARY KEY (department_id));
+
+CREATE OR REPLACE PROCEDURE Insert_Check(product_id IN number,product_name IN varchar2,product_price IN number,department_id IN number,department_name IN varchar2,department_section IN varchar2)IS
+  BEGIN     
+  insert into products values(product_id,product_name,product_price);
+  insert into departments values(department_id,department_name,department_section);
+  END;     
+DECLARE
+BEGIN
+insert_Check(121,'bread','120',123,'grossery','d');
+EXCEPTION
+ WHEN DUP_VAL_ON_INDEX THEN
+ dbms_output.put_line('unique index are repeated re enter data.');
+ rollback;
+ WHEN OTHERS THEN 
+ dbms_output.put_line('data types entered does not match re enter data.');
+ rollback;
+END;
+select * from products
