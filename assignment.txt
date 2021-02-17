@@ -1,0 +1,81 @@
+create two tables and try insert in both the table using procedure after that 
+write exception handling code and rollback.
+
+CREATE TABLE product1 (
+    productID number,
+    productName varchar2(25),
+    productprice number);
+
+ALTER TABLE product1
+ADD PRIMARY KEY(productID);
+
+
+INSERT INTO product1
+VALUES (1,'pen',10);
+
+SELECT * FROM product1;
+
+CREATE TABLE product2 (
+    productID number,
+    productName varchar2(25),
+    productprice number);
+
+ALTER TABLE product2
+ADD PRIMARY KEY(productID);
+
+INSERT INTO product2
+VALUES (1,'pencil',3);
+
+SELECT * FROM product2;
+----------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE insert_mul (p IN number, q IN varchar2, r IN number, s IN number, t IN varchar2, u IN number) IS
+
+BEGIN
+INSERT INTO product1
+VALUES (p, q, r);
+
+INSERT INTO product2
+VALUES (s, t, u);
+
+END;
+------------------------------------------------------------------------------------------------------
+DECLARE 
+BEGIN
+
+insert_mul(4,'book','book',4,'sketch',10);
+
+EXCEPTION
+WHEN OTHERS THEN 
+dbms_output.put_line('ENTER CORRECT DATATYPE VALUES');
+
+rollback;
+
+END;
+------------------------------------------------------------------------------------------------------
+--function return a single row 
+and return multiple rows with cursor.
+** single row can be returned using where condition in the select statement in the Multi_Rows function
+CREATE or REPLACE function Multi_Rows return sys_refcursor is c  sys_refcursor;
+begin
+open c for  SELECT *  FROM product1;
+return c;
+end Multi_Rows;
+ ---------------------------------------------------------------------------------------------------
+declare
+c sys_refcursor;
+TYPE products is RECORD(productID number,productName varchar2(25),productprice number);
+rec products;
+begin
+  c:=Multi_Rows();
+  loop
+  fetch c into rec;
+  exit when c%notfound;
+  dbms_output.put_line(rec.productID||','||rec.productName||','||rec.productprice);
+  end loop;
+end;
+
+
+-------------------------------------------------------------------------------------------------------
+
+
