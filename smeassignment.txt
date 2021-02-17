@@ -1,0 +1,69 @@
+
+Q1)Return a multiple row using cursor
+
+create table customers(ID number,NAME varchar2(30),AGE number,ADDRESS varchar2(30),SALARY number);
+
+insert into customers values(102,'kiran',32,'bangalore',4500);
+insert into customers values(103,'ram',45,'hyderabad',5600);
+
+
+DECLARE  
+   c_id customers.id%type;  
+   c_name customers.name%type;  
+   c_addr customers.address%type;  
+c_age customers.age%type;  
+c_salary customers.salary%type;  
+
+   CURSOR c_customers is  
+      SELECT id, name, address,age,salary FROM customers;  
+BEGIN  
+   OPEN c_customers;  
+   LOOP  
+      FETCH c_customers into c_id, c_name, c_addr;  
+      EXIT WHEN c_customers%notfound;  
+      dbms_output.put_line(c_id || ' ' || c_name || ' ' || c_addr||'  '||c_age ||'  '||c_salary);  
+   END LOOP;  
+   CLOSE c_customers;  
+END; 
+
+-----------------------------------------------------------------------------------------
+Q2)create two tables and try inserting in two tables using procedure and if any exception comes handle it
+CREATE TABLE student1 ( studid number, Name varchar2(25), address varchar2(30), primary key(studid));
+
+
+
+INSERT INTO student1 VALUES (101,'ram','hyderabad');
+
+SELECT * FROM student1;
+
+CREATE TABLE student2 ( studid number, Name varchar2(25), address varchar2(30), primary key(studid));
+
+INSERT INTO student2 VALUES (1001,'anil','hyderabad');
+
+SELECT * FROM student2;
+
+
+CREATE OR REPLACE PROCEDURE stud_info (p IN number, q IN varchar2, r varchar2, s IN number, t IN varchar2, u varchar2) IS
+
+BEGIN
+INSERT INTO student1
+VALUES (p, q, r);
+
+INSERT INTO student2
+VALUES (s, t, u);
+
+END;
+
+DECLARE 
+BEGIN
+
+stud_info(105,'nikil','pune',104,'santoosh',0);
+
+EXCEPTION
+WHEN OTHERS THEN 
+dbms_output.put_line('ENTER CORRECT DATATYPE VALUES');
+
+rollback;
+
+END;
+----------------------------------------------------------------------------------------------
